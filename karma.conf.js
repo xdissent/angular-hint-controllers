@@ -4,8 +4,8 @@ module.exports = function(config) {
     files: [
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      'controllerDecorator.js',
-      'controllerDecorator_test.js'
+      'hint-controllers.js',
+      '*_test.js'
     ],
     exclude: [
     ],
