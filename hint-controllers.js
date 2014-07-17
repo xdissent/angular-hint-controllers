@@ -3,6 +3,10 @@
 
   var nameToControllerMatch = {};
   var controllers = {};
+  var hintLog = require('angular-hint-log');
+  var errorCount = 0;
+  hintLog.moduleName = 'Controllers';
+
   /**
   * Decorates $controller with a patching function to
   * log a message if the controller is instantiated on the window
@@ -21,7 +25,9 @@
             //If the controller is not in the list of already registered controllers
             //and it is not connected to the local scope, it must be instantiated on the window
             if(controllers[ctrl] == undefined && (!locals.$scope || !locals.$scope[ctrl])) {
-              console.log('It is against Angular best practices to instantiate a controller on the window.');
+              hintLog.createErrorMessage('It is against Angular best practices to instantiate a' +
+                ' controller on the window. This behavior is deprecated in Angular 1.3.0',
+                errorCount = ++errorCount);
             }
             var ctrlInstance = $delegate.apply(this, [ctrl, locals]);
             return ctrlInstance;
