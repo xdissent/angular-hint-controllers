@@ -45,6 +45,19 @@
     var originalController = module.controller;
     module.controller = function(controllerName, controllerConstructor) {
       nameToControllerMatch[controllerName] = controllerConstructor;
+      var firstLetter = controllerName.charAt(0);
+
+      if(firstLetter !== firstLetter.toUpperCase() && firstLetter === firstLetter.toLowerCase()) {
+        hintLog.createErrorMessage('Controller best practices is to name the controller with an' +
+          ' uppercase firstLetter. Check the name of ' + controllerName);
+      }
+
+      var splitName = controllerName.split('Controller');
+      if(splitName.length == 1 || splitName[splitName.length - 1] !== '') {
+        hintLog.createErrorMessage('Controller best practices is for a controller name to end with '+
+          '\'Controller\'. Check the name of ' + controllerName);
+      }
+
       controllers[controllerConstructor] = controllerConstructor;
       return originalController.apply(this, arguments);
     };
