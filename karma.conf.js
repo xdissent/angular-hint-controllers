@@ -5,13 +5,16 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'hint-controllers.js',
-      '*_test.js'
+      'hint-controllers_test.js'
     ],
     exclude: [
     ],
     preprocessors: {
       'hint-controllers.js': ['browserify']
     },
-    browsers: ['Chrome']
+    browsers: ['Chrome'],
+    browserify: {
+      debug: true
+    }
   });
 };
