@@ -9,11 +9,11 @@ describe('controllerDecorator', function() {
 
   it('should detect if a controller is instantiated on the window', function() {
     spyOn(hintLog, 'logMessage');
-    window.controllerMock = function() {
+    var controllerMock = function() {
         var element = document.createElement('a');
         element.innerHTML = 'testValue';
     };
-    window.sampleControl = $controller(controllerMock);
+    var sampleControl = $controller(controllerMock);
     expect(hintLog.logMessage).toHaveBeenCalledWith('It is against Angular best practices to instantiate a controller on the window. This behavior is deprecated in Angular 1.3.0');
   });
 
@@ -21,11 +21,11 @@ describe('controllerDecorator', function() {
   it('should explain global controller deprecation for versions greater than 1.2.x', function() {
     angular.version.minor = 3;
     spyOn(hintLog, 'logMessage');
-    window.controllerMock = function() {
+    var controllerMock = function() {
         var element = document.createElement('a');
         element.innerHTML = 'testValue';
     };
-    window.sampleControl = $controller(controllerMock);
+    var sampleControl = $controller(controllerMock);
     expect(hintLog.logMessage).toHaveBeenCalledWith('Global instantiation of controllers was ' +
       'deprecated in Angular 1.3.0. Define the controller on a module.');
   });
@@ -80,11 +80,11 @@ describe('controllerDecorator', function() {
 
 
   it('should collect all hinting messages using hintLog', function() {
-     window.controllerMock = function() {
-        var element = document.createElement('a');
-        element.innerHTML = 'testValue';
+    var controllerMock = function() {
+      var element = document.createElement('a');
+      element.innerHTML = 'testValue';
     };
-    window.sampleControl = $controller(controllerMock);
+    var sampleControl = $controller(controllerMock);
     angular.module('SampleApp', []).controller('sample', function() {});
     var ctrl = $controller('sample');
     expect(hintLog.flush().length).toBe(3);
