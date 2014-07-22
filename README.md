@@ -1,4 +1,4 @@
-hint-controllers
+hint-controllers ![Build Status](https://travis-ci.org/angular/angular-hint-controllers.svg?branch=master)](https://travis-ci.org/angular/angular-hint-controllers)
 ===============
 
 This hinting module is part of the overall tool [AngularHint](https://github.com/angular/angular-hint)

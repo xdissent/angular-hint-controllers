@@ -11,4 +11,5 @@ env:
 
 before_script:
   - npm install -g bower
+  - bower install angular angular-mocks
   - npm install -g karma-cli
