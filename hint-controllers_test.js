@@ -18,6 +18,19 @@ describe('controllerDecorator', function() {
   });
 
 
+  it('should explain global controller deprecation for versions greater than 1.2.x', function() {
+    angular.version.minor = 3;
+    spyOn(hintLog, 'logMessage');
+    window.controllerMock = function() {
+        var element = document.createElement('a');
+        element.innerHTML = 'testValue';
+    };
+    window.sampleControl = $controller(controllerMock);
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Global instantiation of controllers was ' +
+      'deprecated in Angular 1.3.0. Define the controller on a module.');
+  });
+
+
   it('should not log a message if the controller is on the local scope', function() {
     spyOn(hintLog, 'logMessage');
     angular.module('SampleApp', []).controller('SampleController', function() {});

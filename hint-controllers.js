@@ -22,8 +22,13 @@ angular.module('ngHintController', []).
           //If the controller is not in the list of already registered controllers
           //and it is not connected to the local scope, it must be instantiated on the window
           if(controllers[ctrl] == undefined && (!locals.$scope || !locals.$scope[ctrl])) {
-            hintLog.logMessage('It is against Angular best practices to instantiate a' +
+            if(angular.version.minor <= 2) {
+              hintLog.logMessage('It is against Angular best practices to instantiate a' +
               ' controller on the window. This behavior is deprecated in Angular 1.3.0');
+            } else {
+              hintLog.logMessage('Global instantiation of controllers was deprecated in Angular' +
+              ' 1.3.0. Define the controller on a module.');
+            }
           }
           var ctrlInstance = $delegate.apply(this, [ctrl, locals]);
           return ctrlInstance;
