@@ -1,0 +1,35 @@
+{
+  "name": "angular-hint-controllers",
+  "version": "0.0.0",
+  "description": "hint module for controllers best practices",
+  "main": "hint-controllers.js",
+  "devDependencies": {
+    "karma": "0.12.16",
+    "karma-chrome-launcher": "^0.1.4",
+    "karma-coverage": "~0.1.4",
+    "karma-firefox-launcher": "^0.1.3",
+    "karma-jasmine": "^0.1.5"
+  },
+  "scripts": {
+    "test": "karma start karma-sauce.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular/angular-hint-controllers"
+  },
+  "author": "ealtenho",
+  "license": "apache 2",
+  "bugs": {
+    "url": "https://github.com/angular/angular-hint-controllers/issues"
+  },
+  "homepage": "https://github.com/angular/angular-hint-controllers",
+  "dependencies": {
+    "angular-hint-log": "0.0.0",
+    "browserify": "^4.2.0",
+    "gulp": "^3.8.5",
+    "karma-bro": "^0.6.0",
+    "karma-coverage": "^0.2.4",
+    "karma-sauce-launcher": "^0.2.9",
+    "watchify": "^0.10.2"
+  }
+}
