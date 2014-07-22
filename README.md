@@ -18,3 +18,12 @@ Features:
   angular.module('controllerApp').controller(function(){
     //Do some behavior
   });
+  ```
+
+2. Hints About Best Practices for Controller Naming
+
+  Angular controller names should begin with a capital letter and end with -Controller.
+
+  ```javascript
+  angular.module('SampleApp', []).controller('SampleController', function() {});
+  ```
