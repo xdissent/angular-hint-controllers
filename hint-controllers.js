@@ -8,7 +8,7 @@ var hintLog = angular.hint = require('angular-hint-log');
 * Decorates $controller with a patching function to
 * log a message if the controller is instantiated on the window
 */
-angular.module('ngHintController', []).
+angular.module('ngHintControllers', []).
   config(function ($provide) {
     $provide.decorator('$controller', function($delegate, $injector) {
         return function(ctrl, locals) {

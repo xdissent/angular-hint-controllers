@@ -1,7 +1,7 @@
 var hintLog = angular.hint;
 describe('controllerDecorator', function() {
   var $controller;
-  beforeEach(module('ngHintController'));
+  beforeEach(module('ngHintControllers'));
 
   beforeEach(inject(function(_$controller_) {
     $controller = _$controller_;
