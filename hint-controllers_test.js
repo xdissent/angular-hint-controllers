@@ -2,7 +2,9 @@ var hintLog = angular.hint;
 describe('controllerDecorator', function() {
   var $controller;
   beforeEach(module('ngHintControllers'));
-
+  beforeEach(function(){
+    angular.version.minor = 2;
+  });
   beforeEach(inject(function(_$controller_) {
     $controller = _$controller_;
   }));
