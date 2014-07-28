@@ -16,7 +16,7 @@ describe('controllerDecorator', function() {
         element.innerHTML = 'testValue';
     };
     var sampleControl = $controller(controllerMock);
-    expect(hintLog.logMessage).toHaveBeenCalledWith('It is against Angular best practices to instantiate a controller on the window. This behavior is deprecated in Angular 1.3.0');
+    expect(hintLog.logMessage).toHaveBeenCalledWith('##Controllers## It is against Angular best practices to instantiate a controller on the window. This behavior is deprecated in Angular 1.3.0');
   });
 
 
@@ -28,7 +28,7 @@ describe('controllerDecorator', function() {
         element.innerHTML = 'testValue';
     };
     var sampleControl = $controller(controllerMock);
-    expect(hintLog.logMessage).toHaveBeenCalledWith('Global instantiation of controllers was ' +
+    expect(hintLog.logMessage).toHaveBeenCalledWith('##Controllers## Global instantiation of controllers was ' +
       'deprecated in Angular 1.3.0. Define the controller on a module.');
   });
 
@@ -89,6 +89,6 @@ describe('controllerDecorator', function() {
     var sampleControl = $controller(controllerMock);
     angular.module('SampleApp', []).controller('sample', function() {});
     var ctrl = $controller('sample');
-    expect(hintLog.flush().length).toBe(3);
+    expect(Object.keys(hintLog.flush()['Controllers']).length).toBe(3);
   });
 });

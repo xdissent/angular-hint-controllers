@@ -23,10 +23,10 @@ angular.module('ngHintControllers', []).
           //and it is not connected to the local scope, it must be instantiated on the window
           if(controllers[ctrl] == undefined && (!locals.$scope || !locals.$scope[ctrl])) {
             if(angular.version.minor <= 2) {
-              hintLog.logMessage('It is against Angular best practices to instantiate a' +
+              hintLog.logMessage('##Controllers## It is against Angular best practices to instantiate a' +
               ' controller on the window. This behavior is deprecated in Angular 1.3.0');
             } else {
-              hintLog.logMessage('Global instantiation of controllers was deprecated in Angular' +
+              hintLog.logMessage('##Controllers## Global instantiation of controllers was deprecated in Angular' +
               ' 1.3.0. Define the controller on a module.');
             }
           }
@@ -49,13 +49,13 @@ angular.module = function() {
     var firstLetter = controllerName.charAt(0);
 
     if(firstLetter !== firstLetter.toUpperCase() && firstLetter === firstLetter.toLowerCase()) {
-      hintLog.logMessage('Controller best practices is to name the controller with an' +
+      hintLog.logMessage('##Controllers## Controller best practices is to name the controller with an' +
         ' uppercase first letter. Check the name of ' + controllerName);
     }
 
     var splitName = controllerName.split('Controller');
     if(splitName.length == 1 || splitName[splitName.length - 1] !== '') {
-      hintLog.logMessage('Controller best practices is for a controller name to end with '+
+      hintLog.logMessage('##Controllers## Controller best practices is for a controller name to end with '+
         '\'Controller\'. Check the name of ' + controllerName);
     }
 
