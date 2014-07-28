@@ -1,6 +1,6 @@
 {
   "name": "angular-hint-controllers",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "hint module for controllers best practices",
   "main": "hint-controllers.js",
   "devDependencies": {
