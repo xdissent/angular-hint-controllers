@@ -49,13 +49,13 @@ angular.module = function() {
     var firstLetter = controllerName.charAt(0);
 
     if(firstLetter !== firstLetter.toUpperCase() && firstLetter === firstLetter.toLowerCase()) {
-      hintLog.logMessage('##Controllers## Controller best practices is to name the controller with an' +
+      hintLog.logMessage('##Controllers## The best practice is to name controllers with an' +
         ' uppercase first letter. Check the name of ' + controllerName);
     }
 
     var splitName = controllerName.split('Controller');
     if(splitName.length == 1 || splitName[splitName.length - 1] !== '') {
-      hintLog.logMessage('##Controllers## Controller best practices is for a controller name to end with '+
+      hintLog.logMessage('##Controllers## The best practice is to name controllers ending with ' +
         '\'Controller\'. Check the name of ' + controllerName);
     }
 
