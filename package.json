@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/angular/angular-hint-controllers",
   "dependencies": {
-    "angular-hint-log": "0.1.0",
+    "angular-hint-log": "0.2.0",
     "browserify": "^4.2.0",
     "gulp": "^3.8.5",
     "karma-bro": "^0.6.0",
