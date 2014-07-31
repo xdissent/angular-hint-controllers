@@ -37,7 +37,9 @@ describe('controllerDecorator', function() {
     spyOn(hintLog, 'logMessage');
     angular.module('SampleApp', []).controller('SampleController', function() {});
     var ctrl = $controller('SampleController');
-    expect(hintLog.logMessage).not.toHaveBeenCalled();
+    expect(hintLog.logMessage).not.toHaveBeenCalledWith('##Controllers## It is against Angular best '
+      + 'practices to instantiate a controller on the window. This behavior is deprecated in Angular'
+      + ' 1.3.0');
   });
 
 
@@ -45,7 +47,8 @@ describe('controllerDecorator', function() {
     spyOn(hintLog, 'logMessage');
     angular.module('SampleApp', []).controller('sampleController', function() {});
     var ctrl = $controller('sampleController');
-    expect(hintLog.logMessage).toHaveBeenCalled();
+    expect(hintLog.logMessage).toHaveBeenCalledWith('##Controllers## The best practice is to name ' +
+      'controllers with an uppercase first letter. Check the name of \'sampleController\'.');
   });
 
 
@@ -57,19 +60,21 @@ describe('controllerDecorator', function() {
   });
 
 
-  it('should not warn if a controller name does not include Controller', function(){
+  it('should warn if a controller name does not include Controller', function(){
     spyOn(hintLog, 'logMessage');
     angular.module('SampleApp', []).controller('Sample', function() {});
     var ctrl = $controller('Sample');
-    expect(hintLog.logMessage).toHaveBeenCalled();
+    expect(hintLog.logMessage).toHaveBeenCalledWith('##Controllers## The best practice is to name ' +
+      'controllers ending with \'Controller\'. Check the name of \'Sample\'');
   });
 
 
-  it('should not warn if a controller name does not end with Controller', function(){
+  it('should warn if a controller name does not end with Controller', function(){
     spyOn(hintLog, 'logMessage');
     angular.module('SampleApp', []).controller('SampleControllerYay', function() {});
     var ctrl = $controller('SampleControllerYay');
-    expect(hintLog.logMessage).toHaveBeenCalled();
+    expect(hintLog.logMessage).toHaveBeenCalledWith('##Controllers## The best practice is to name ' +
+      'controllers ending with \'Controller\'. Check the name of \'SampleControllerYay\'');
   });
 
 
