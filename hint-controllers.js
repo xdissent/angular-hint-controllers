@@ -1,8 +1,8 @@
 'use strict';
 
-var nameToControllerMatch = {};
-var controllers = {};
-var hintLog = angular.hint = require('angular-hint-log');
+var nameToControllerMatch = {},
+  controllers = {},
+  hintLog = angular.hint = require('angular-hint-log');
 
 /**
 * Decorates $controller with a patching function to
@@ -41,8 +41,8 @@ angular.module('ngHintControllers', []).
 */
 var originalModule = angular.module;
 angular.module = function() {
-  var module = originalModule.apply(this, arguments);
-  var originalController = module.controller;
+  var module = originalModule.apply(this, arguments),
+    originalController = module.controller;
   module.controller = function(controllerName, controllerConstructor) {
     nameToControllerMatch[controllerName] = controllerConstructor;
     var firstLetter = controllerName.charAt(0);
