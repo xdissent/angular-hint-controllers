@@ -16,7 +16,9 @@ describe('controllerDecorator', function() {
         element.innerHTML = 'testValue';
     };
     var sampleControl = $controller(controllerMock);
-    expect(hintLog.logMessage).toHaveBeenCalledWith('##Controllers## It is against Angular best practices to instantiate a controller on the window. This behavior is deprecated in Angular 1.3.0');
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'It is against Angular best ' +
+      'practices to instantiate a controller on the window. This behavior is deprecated in ' +
+      'Angular 1.3.0', 2);
   });
 
 
@@ -28,8 +30,8 @@ describe('controllerDecorator', function() {
         element.innerHTML = 'testValue';
     };
     var sampleControl = $controller(controllerMock);
-    expect(hintLog.logMessage).toHaveBeenCalledWith('##Controllers## Global instantiation of controllers was ' +
-      'deprecated in Angular 1.3.0. Define the controller on a module.');
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'Global instantiation of ' +
+      'controllers was deprecated in Angular 1.3.0. Define the controller on a module.', 1);
   });
 
 
@@ -37,9 +39,9 @@ describe('controllerDecorator', function() {
     spyOn(hintLog, 'logMessage');
     angular.module('SampleApp', []).controller('SampleController', function() {});
     var ctrl = $controller('SampleController');
-    expect(hintLog.logMessage).not.toHaveBeenCalledWith('##Controllers## It is against Angular best '
-      + 'practices to instantiate a controller on the window. This behavior is deprecated in Angular'
-      + ' 1.3.0');
+    expect(hintLog.logMessage).not.toHaveBeenCalledWith('Controllers', 'It is against Angular' +
+      'best practices to instantiate a controller on the window. This behavior is deprecated in' +
+      ' Angular 1.3.0', 2);
   });
 
 
@@ -47,8 +49,8 @@ describe('controllerDecorator', function() {
     spyOn(hintLog, 'logMessage');
     angular.module('SampleApp', []).controller('sampleController', function() {});
     var ctrl = $controller('sampleController');
-    expect(hintLog.logMessage).toHaveBeenCalledWith('##Controllers## The best practice is to name ' +
-      'controllers with an uppercase first letter. Check the name of \'sampleController\'.');
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
+      'controllers with an uppercase first letter. Check the name of \'sampleController\'.', 2);
   });
 
 
@@ -64,8 +66,8 @@ describe('controllerDecorator', function() {
     spyOn(hintLog, 'logMessage');
     angular.module('SampleApp', []).controller('Sample', function() {});
     var ctrl = $controller('Sample');
-    expect(hintLog.logMessage).toHaveBeenCalledWith('##Controllers## The best practice is to name ' +
-      'controllers ending with \'Controller\'. Check the name of \'Sample\'');
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
+      'controllers ending with \'Controller\'. Check the name of \'Sample\'', 2);
   });
 
 
@@ -73,8 +75,8 @@ describe('controllerDecorator', function() {
     spyOn(hintLog, 'logMessage');
     angular.module('SampleApp', []).controller('SampleControllerYay', function() {});
     var ctrl = $controller('SampleControllerYay');
-    expect(hintLog.logMessage).toHaveBeenCalledWith('##Controllers## The best practice is to name ' +
-      'controllers ending with \'Controller\'. Check the name of \'SampleControllerYay\'');
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
+      'controllers ending with \'Controller\'. Check the name of \'SampleControllerYay\'', 2);
   });
 
 
@@ -94,6 +96,7 @@ describe('controllerDecorator', function() {
     var sampleControl = $controller(controllerMock);
     angular.module('SampleApp', []).controller('sample', function() {});
     var ctrl = $controller('sample');
-    expect(Object.keys(hintLog.flush()['Controllers']).length).toBe(3);
+    var log = hintLog.flush();
+    expect(log['Controllers']['Warning Messages'].length).toBe(3);
   });
 });
