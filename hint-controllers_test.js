@@ -51,6 +51,34 @@ describe('controllerDecorator', function() {
   });
 
 
+  it('should allow the instantiation of global controller functions', function() {
+    spyOn(hintLog, 'logMessage');
+    var scope = $rootScope.$new();
+      window.GlobalFunction = function GlobalFunction($scope) {
+        $scope.types = [
+            { name: 'Controllers', isChecked: false},
+            { name: 'Directives', isChecked: false},
+            { name: 'DOM', isChecked: false},
+            { name: 'Events', isChecked: false},
+            { name: 'Interpolation', isChecked: false},
+            { name: 'Modules', isChecked: false}
+          ];
+      }
+      var ctrl = $controller('GlobalFunction', {$scope: scope});
+      var elm = angular.element('<div ng-controller="GlobalFunction">' +
+                                  '<span ng-repeat="type in types">' +
+                                    '<input  type="checkbox" id="{{type.name}}" ng-click="changeList()" ng-model="type.isChecked">' +
+                                      '{{type.name}}' +
+                                  '</span>' +
+                                  '<form></form>' +
+                                '</div>');
+      expect(function() {
+        $compile(elm)(scope);
+        $rootScope.$digest();
+      }).not.toThrow();
+  });
+
+
   it('should explain global controller deprecation for versions greater than 1.2.x', function() {
     angular.version.minor = 3;
     spyOn(hintLog, 'logMessage');

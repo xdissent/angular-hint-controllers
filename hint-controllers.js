@@ -17,7 +17,7 @@ angular.module('ngHintControllers', []).
         return function(ctrl, locals) {
           //If the controller name is passed, find the controller than matches it
           if(typeof ctrl === 'string') {
-            ctrl = nameToControllerMatch[ctrl];
+            ctrl = nameToControllerMatch[ctrl] ? nameToControllerMatch[ctrl] : window[ctrl];
           }
           locals = locals || {};
           //If the controller is not in the list of already registered controllers
