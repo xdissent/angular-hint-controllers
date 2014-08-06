@@ -79,6 +79,36 @@ describe('controllerDecorator', function() {
   });
 
 
+  it('should still warn about the naming of global controller functions', function() {
+    spyOn(hintLog, 'logMessage');
+    var scope = $rootScope.$new();
+    window.globalFunction = function globalFunction($scope) {
+      $scope.types = [
+          { name: 'Controllers', isChecked: false},
+          { name: 'Directives', isChecked: false},
+          { name: 'DOM', isChecked: false},
+          { name: 'Events', isChecked: false},
+          { name: 'Interpolation', isChecked: false},
+          { name: 'Modules', isChecked: false}
+        ];
+    }
+    var ctrl = $controller('globalFunction', {$scope: scope});
+    var elm = angular.element('<div ng-controller="globalFunction">' +
+                                '<span ng-repeat="type in types">' +
+                                  '<input  type="checkbox" id="{{type.name}}" ng-click="changeList()" ng-model="type.isChecked">' +
+                                    '{{type.name}}' +
+                                '</span>' +
+                                '<form></form>' +
+                              '</div>');
+    $compile(elm)(scope);
+    $rootScope.$digest();
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
+      'controllers with an uppercase first letter. Check the name of \'globalFunction\'.', 2);
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
+      'controllers ending with \'Controller\'. Check the name of \'globalFunction\'.', 2);
+  });
+
+
   it('should explain global controller deprecation for versions greater than 1.2.x', function() {
     angular.version.minor = 3;
     spyOn(hintLog, 'logMessage');
@@ -124,7 +154,7 @@ describe('controllerDecorator', function() {
     angular.module('SampleApp', []).controller('Sample', function() {});
     var ctrl = $controller('Sample');
     expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
-      'controllers ending with \'Controller\'. Check the name of \'Sample\'', 2);
+      'controllers ending with \'Controller\'. Check the name of \'Sample\'.', 2);
   });
 
 
@@ -133,7 +163,7 @@ describe('controllerDecorator', function() {
     angular.module('SampleApp', []).controller('SampleControllerYay', function() {});
     var ctrl = $controller('SampleControllerYay');
     expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
-      'controllers ending with \'Controller\'. Check the name of \'SampleControllerYay\'', 2);
+      'controllers ending with \'Controller\'. Check the name of \'SampleControllerYay\'.', 2);
   });
 
 

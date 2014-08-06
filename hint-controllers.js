@@ -17,7 +17,14 @@ angular.module('ngHintControllers', []).
         return function(ctrl, locals) {
           //If the controller name is passed, find the controller than matches it
           if(typeof ctrl === 'string') {
-            ctrl = nameToControllerMatch[ctrl] ? nameToControllerMatch[ctrl] : window[ctrl];
+            if(nameToControllerMatch[ctrl]) {
+              ctrl = nameToControllerMatch[ctrl];
+            } else {
+              //If the controller function cannot be found, check for it on the window
+              checkUppercaseName(ctrl);
+              checkControllerInName(ctrl);
+              ctrl = window[ctrl];
+            }
           }
           locals = locals || {};
           //If the controller is not in the list of already registered controllers
@@ -46,24 +53,31 @@ angular.module('ngHintControllers', []).
 * Hint about the best practices for naming controllers.
 */
 var originalModule = angular.module;
+
+function checkUppercaseName(controllerName) {
+  var firstLetter = controllerName.charAt(0);
+  if(firstLetter !== firstLetter.toUpperCase() && firstLetter === firstLetter.toLowerCase()) {
+    hintLog.logMessage(MODULE_NAME, 'The best practice is to name controllers with an' +
+      ' uppercase first letter. Check the name of \'' + controllerName + '\'.', SEVERITY_WARNING);
+  }
+}
+
+function checkControllerInName(controllerName) {
+  var splitName = controllerName.split('Controller');
+  if(splitName.length === 1 || splitName[splitName.length - 1] !== '') {
+    hintLog.logMessage(MODULE_NAME, 'The best practice is to name controllers ending with ' +
+      '\'Controller\'. Check the name of \'' + controllerName + '\'.', SEVERITY_WARNING);
+  }
+}
+
 angular.module = function() {
   var module = originalModule.apply(this, arguments),
     originalController = module.controller;
   module.controller = function(controllerName, controllerConstructor) {
     nameToControllerMatch[controllerName] = controllerConstructor;
     controllers[controllerConstructor] = controllerConstructor;
-
-    var firstLetter = controllerName.charAt(0);
-    if(firstLetter !== firstLetter.toUpperCase() && firstLetter === firstLetter.toLowerCase()) {
-      hintLog.logMessage(MODULE_NAME, 'The best practice is to name controllers with an' +
-        ' uppercase first letter. Check the name of \'' + controllerName + '\'.', SEVERITY_WARNING);
-    }
-
-    var splitName = controllerName.split('Controller');
-    if(splitName.length === 1 || splitName[splitName.length - 1] !== '') {
-      hintLog.logMessage(MODULE_NAME, 'The best practice is to name controllers ending with ' +
-        '\'Controller\'. Check the name of \'' + controllerName + '\'', SEVERITY_WARNING);
-    }
+    checkUppercaseName(controllerName);
+    checkControllerInName(controllerName);
     return originalController.apply(this, arguments);
   };
   return module;
