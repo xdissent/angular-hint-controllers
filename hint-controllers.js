@@ -22,7 +22,9 @@ angular.module('ngHintControllers', []).
           locals = locals || {};
           //If the controller is not in the list of already registered controllers
           //and it is not connected to the local scope, it must be instantiated on the window
-          if(!controllers[ctrl] && (!locals.$scope || !locals.$scope[ctrl])) {
+          if(!controllers[ctrl] && (!locals.$scope || !locals.$scope[ctrl]) &&
+              ctrl.toString().indexOf('@name ngModel.NgModelController#$render') === -1 &&
+              ctrl.toString().indexOf('@name form.FormController') === -1) {
             if(angular.version.minor <= 2) {
               hintLog.logMessage(MODULE_NAME, 'It is against Angular best practices to ' +
                 'instantiate a controller on the window. This behavior is deprecated in Angular' +

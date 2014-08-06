@@ -1,12 +1,14 @@
 var hintLog = angular.hint;
 describe('controllerDecorator', function() {
-  var $controller;
+  var $controller, $rootScope;
   beforeEach(module('ngHintControllers'));
   beforeEach(function(){
     angular.version.minor = 2;
   });
-  beforeEach(inject(function(_$controller_) {
+  beforeEach(inject(function(_$controller_, _$rootScope_, _$compile_) {
     $controller = _$controller_;
+    $rootScope = _$rootScope_;
+    $compile = _$compile_;
   }));
 
   it('should detect if a controller is instantiated on the window', function() {
@@ -19,6 +21,33 @@ describe('controllerDecorator', function() {
     expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'It is against Angular best ' +
       'practices to instantiate a controller on the window. This behavior is deprecated in ' +
       'Angular 1.3.0', 2);
+  });
+
+
+  it('should not warn about angular internal controllers instantiated on the window', function() {
+    spyOn(hintLog, 'logMessage');
+    var scope = $rootScope.$new();
+      angular.module('SampleApp', []).controller('SampleController', function($scope) {
+        $scope.types = [
+            { name: 'Controllers', isChecked: false},
+            { name: 'Directives', isChecked: false},
+            { name: 'DOM', isChecked: false},
+            { name: 'Events', isChecked: false},
+            { name: 'Interpolation', isChecked: false},
+            { name: 'Modules', isChecked: false}
+          ];
+      });
+      var ctrl = $controller('SampleController', {$scope: scope});
+      var elm = angular.element('<div ng-controller="SampleController">' +
+                                  '<span ng-repeat="type in types">' +
+                                    '<input  type="checkbox" id="{{type.name}}" ng-click="changeList()" ng-model="type.isChecked">' +
+                                      '{{type.name}}' +
+                                  '</span>' +
+                                  '<form></form>' +
+                                '</div>');
+      $compile(elm)(scope);
+      $rootScope.$digest();
+      expect(hintLog.logMessage).not.toHaveBeenCalled();
   });
 
 
