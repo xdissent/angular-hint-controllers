@@ -24,7 +24,7 @@ angular.module('ngHintControllers', []).
               checkUppercaseName(ctrl);
               checkControllerInName(ctrl);
               ctrl = window[ctrl] || ctrl;
-              if(typeof ctrl !== 'function') {
+              if(typeof ctrl === 'string') {
                 throw new Error('The controller function for ' + ctrl + ' could not be found.' +
                   ' Is the function registered under that name?');
               }
