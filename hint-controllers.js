@@ -23,7 +23,11 @@ angular.module('ngHintControllers', []).
               //If the controller function cannot be found, check for it on the window
               checkUppercaseName(ctrl);
               checkControllerInName(ctrl);
-              ctrl = window[ctrl];
+              ctrl = window[ctrl] || ctrl;
+              if(typeof ctrl !== 'function') {
+                throw new Error('The controller function for ' + ctrl + ' could not be found.' +
+                  ' Is the function registered under that name?');
+              }
             }
           }
           locals = locals || {};

@@ -109,6 +109,25 @@ describe('controllerDecorator', function() {
   });
 
 
+  it('should throw a helpful error if the controller cannot be created', function($scope) {
+      var scope = $rootScope.$new();
+      window.GlobalFunction = function GlobalFunction($scope) {
+        $scope.types = [
+            { name: 'Controllers', isChecked: false},
+            { name: 'Directives', isChecked: false},
+            { name: 'DOM', isChecked: false},
+            { name: 'Events', isChecked: false},
+            { name: 'Interpolation', isChecked: false},
+            { name: 'Modules', isChecked: false}
+          ];
+      }
+      expect(function() {
+        var ctrl = $controller('NotTheGlobalFunction', {$scope: scope});
+      }).toThrow('The controller function for NotTheGlobalFunction could not be found. ' +
+          'Is the function registered under that name?');
+  });
+
+
   it('should explain global controller deprecation for versions greater than 1.2.x', function() {
     angular.version.minor = 3;
     spyOn(hintLog, 'logMessage');
@@ -184,6 +203,6 @@ describe('controllerDecorator', function() {
     angular.module('SampleApp', []).controller('sample', function() {});
     var ctrl = $controller('sample');
     var log = hintLog.flush();
-    expect(log['Controllers']['Warning Messages'].length).toBe(3);
+    expect(log['Controllers']['Warning Messages'].length).toBe(4);
   });
 });
