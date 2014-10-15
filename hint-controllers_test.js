@@ -209,6 +209,9 @@ describe('controllerDecorator', function() {
     angular.module('SampleApp', []).controller('sample', function() {});
     $controller('sample');
     var log = hintLog.flush();
-    expect(log['Controllers']['Warning Messages'].length).toBe(2);
+    var totalNumberOfMessages = log['Controllers']['Warning Messages'].length +
+                                (log['Controllers']['Error Messages'] || []).length;
+
+    expect(totalNumberOfMessages).toBe(3);
   });
 });
