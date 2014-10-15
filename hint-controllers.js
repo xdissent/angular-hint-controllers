@@ -13,43 +13,45 @@ var nameToControllerMap = {},
 */
 angular.module('ngHintControllers', []).
   config(function ($provide) {
-    $provide.decorator('$controller', function($delegate) {
-        return function(ctrl, locals) {
-          //If the controller name is passed, find the controller than matches it
-          if(typeof ctrl === 'string') {
-            if(nameToControllerMap[ctrl]) {
-              ctrl = nameToControllerMap[ctrl];
-            } else {
-              //If the controller function cannot be found, check for it on the window
-              checkUppercaseName(ctrl);
-              checkControllerInName(ctrl);
-              ctrl = window[ctrl] || ctrl;
-              if(typeof ctrl === 'string') {
-                throw new Error('The controller function for ' + ctrl + ' could not be found.' +
-                  ' Is the function registered under that name?');
-              }
-            }
-          }
-          locals = locals || {};
-          //If the controller is not in the list of already registered controllers
-          //and it is not connected to the local scope, it must be instantiated on the window
-          if(!controllers[ctrl] && (!locals.$scope || !locals.$scope[ctrl]) &&
-              ctrl.toString().indexOf('@name ngModel.NgModelController#$render') === -1 &&
-              ctrl.toString().indexOf('@name form.FormController') === -1) {
-            if(angular.version.minor <= 2) {
-              hintLog.logMessage(MODULE_NAME, 'It is against Angular best practices to ' +
-                'instantiate a controller on the window. This behavior is deprecated in Angular' +
-                ' 1.3.0', SEVERITY_WARNING);
-            } else {
-              hintLog.logMessage(MODULE_NAME, 'Global instantiation of controllers was deprecated' +
-                ' in Angular 1.3.0. Define the controller on a module.', SEVERITY_ERROR);
-            }
-          }
-          var ctrlInstance = $delegate.apply(this, [ctrl, locals]);
-          return ctrlInstance;
-        };
-    });
-});
+    $provide.decorator('$controller', controllerDecorator);
+  });
+
+function controllerDecorator($delegate) {
+  return function(ctrl, locals) {
+    //If the controller name is passed, find the controller than matches it
+    if(typeof ctrl === 'string') {
+      if(nameToControllerMap[ctrl]) {
+        ctrl = nameToControllerMap[ctrl];
+      } else {
+        //If the controller function cannot be found, check for it on the window
+        checkUppercaseName(ctrl);
+        checkControllerInName(ctrl);
+        ctrl = window[ctrl] || ctrl;
+        if(typeof ctrl === 'string') {
+          throw new Error('The controller function for ' + ctrl + ' could not be found.' +
+            ' Is the function registered under that name?');
+        }
+      }
+    }
+    locals = locals || {};
+    //If the controller is not in the list of already registered controllers
+    //and it is not connected to the local scope, it must be instantiated on the window
+    if(!controllers[ctrl] && (!locals.$scope || !locals.$scope[ctrl]) &&
+        ctrl.toString().indexOf('@name ngModel.NgModelController#$render') === -1 &&
+        ctrl.toString().indexOf('@name form.FormController') === -1) {
+      if(angular.version.minor <= 2) {
+        hintLog.logMessage(MODULE_NAME, 'It is against Angular best practices to ' +
+          'instantiate a controller on the window. This behavior is deprecated in Angular' +
+          ' 1.3.0', SEVERITY_WARNING);
+      } else {
+        hintLog.logMessage(MODULE_NAME, 'Global instantiation of controllers was deprecated' +
+          ' in Angular 1.3.0. Define the controller on a module.', SEVERITY_ERROR);
+      }
+    }
+    var ctrlInstance = $delegate.apply(this, [ctrl, locals]);
+    return ctrlInstance;
+  };
+}
 
 /**
 * Save details of the controllers as they are instantiated
