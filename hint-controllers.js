@@ -1,6 +1,6 @@
 'use strict';
 
-var nameToControllerMatch = {},
+var nameToControllerMap = {},
   controllers = {},
   hintLog = angular.hint = require('angular-hint-log'),
   MODULE_NAME = 'Controllers',
@@ -17,8 +17,8 @@ angular.module('ngHintControllers', []).
         return function(ctrl, locals) {
           //If the controller name is passed, find the controller than matches it
           if(typeof ctrl === 'string') {
-            if(nameToControllerMatch[ctrl]) {
-              ctrl = nameToControllerMatch[ctrl];
+            if(nameToControllerMap[ctrl]) {
+              ctrl = nameToControllerMap[ctrl];
             } else {
               //If the controller function cannot be found, check for it on the window
               checkUppercaseName(ctrl);
@@ -78,7 +78,7 @@ angular.module = function() {
   var module = originalModule.apply(this, arguments),
     originalController = module.controller;
   module.controller = function(controllerName, controllerConstructor) {
-    nameToControllerMatch[controllerName] = controllerConstructor;
+    nameToControllerMap[controllerName] = controllerConstructor;
     controllers[controllerConstructor] = controllerConstructor;
     checkUppercaseName(controllerName);
     checkControllerInName(controllerName);
