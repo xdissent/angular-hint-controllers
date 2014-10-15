@@ -48,7 +48,9 @@ function controllerDecorator($delegate) {
           ' in Angular 1.3.0. Define the controller on a module.', SEVERITY_ERROR);
       }
     }
-    var ctrlInstance = $delegate.apply(this, [ctrl, locals]);
+    arguments[0] = ctrl;
+    arguments[1] = locals;
+    var ctrlInstance = $delegate.apply(this, arguments);
     return ctrlInstance;
   };
 }
