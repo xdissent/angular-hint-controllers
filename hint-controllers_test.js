@@ -14,14 +14,14 @@ describe('controllerDecorator', function() {
     $compile = _$compile_;
   }));
 
+  function MockController() {
+    var element = document.createElement('a');
+    element.innerHTML = 'testValue';
+  }
 
   it('should detect if a controller is instantiated on the window', function() {
     spyOn(hintLog, 'logMessage');
-    var controllerMock = function() {
-      var element = document.createElement('a');
-      element.innerHTML = 'testValue';
-    };
-    var sampleControl = $controller(controllerMock);
+    var sampleControl = $controller(MockController);
     if (angular.version.minor < 3) {
       expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'It is against Angular best ' +
         'practices to instantiate a controller on the window. This behavior is deprecated in ' +
@@ -142,11 +142,7 @@ describe('controllerDecorator', function() {
       return;
     }
     spyOn(hintLog, 'logMessage');
-    var controllerMock = function() {
-        var element = document.createElement('a');
-        element.innerHTML = 'testValue';
-    };
-    var sampleControl = $controller(controllerMock);
+    var sampleControl = $controller(MockController);
     expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'Global instantiation of ' +
       'controllers was deprecated in Angular 1.3.0. Define the controller on a module.', SEVERITY_ERROR);
   });
@@ -206,14 +202,10 @@ describe('controllerDecorator', function() {
 
 
   it('should collect all hinting messages using hintLog', function() {
-    var controllerMock = function() {
-      var element = document.createElement('a');
-      element.innerHTML = 'testValue';
-    };
-    var sampleControl = $controller(controllerMock);
+    var sampleControl = $controller(MockController);
     angular.module('SampleApp', []).controller('sample', function() {});
     var ctrl = $controller('sample');
     var log = hintLog.flush();
-    expect(log['Controllers']['Warning Messages'].length).toBe(3);
+    expect(log['Controllers']['Warning Messages'].length).toBe(4);
   });
 });
