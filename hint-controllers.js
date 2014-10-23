@@ -1,11 +1,15 @@
 'use strict';
 
+var hint = angular.hint = require('angular-hint-log');
+
+var MODULE_NAME = 'Controllers',
+    CATEGORY_CONTROLLER_NAME = 'Name controllers according to best practices',
+    SEVERITY_ERROR = 1,
+    SEVERITY_WARNING = 2;
+
+// local state
 var nameToControllerMap = {},
-  controllers = {},
-  hintLog = angular.hint = require('angular-hint-log'),
-  MODULE_NAME = 'Controllers',
-  SEVERITY_ERROR = 1,
-  SEVERITY_WARNING = 2;
+    controllers = {};
 
 /**
 * Decorates $controller with a patching function to
@@ -19,15 +23,14 @@ angular.module('ngHintControllers', []).
 function controllerDecorator($delegate) {
   return function(ctrl, locals) {
     //If the controller name is passed, find the controller than matches it
-    if(typeof ctrl === 'string') {
-      if(nameToControllerMap[ctrl]) {
+    if (typeof ctrl === 'string') {
+      if (nameToControllerMap[ctrl]) {
         ctrl = nameToControllerMap[ctrl];
       } else {
         //If the controller function cannot be found, check for it on the window
-        checkUppercaseName(ctrl);
-        checkControllerInName(ctrl);
+        sendMessageForControllerName(ctrl);
         ctrl = window[ctrl] || ctrl;
-        if(typeof ctrl === 'string') {
+        if (typeof ctrl === 'string') {
           throw new Error('The controller function for ' + ctrl + ' could not be found.' +
             ' Is the function registered under that name?');
         }
@@ -36,15 +39,15 @@ function controllerDecorator($delegate) {
     locals = locals || {};
     //If the controller is not in the list of already registered controllers
     //and it is not connected to the local scope, it must be instantiated on the window
-    if(!controllers[ctrl] && (!locals.$scope || !locals.$scope[ctrl]) &&
+    if (!controllers[ctrl] && (!locals.$scope || !locals.$scope[ctrl]) &&
         ctrl.toString().indexOf('@name ngModel.NgModelController#$render') === -1 &&
         ctrl.toString().indexOf('@name form.FormController') === -1) {
-      if(angular.version.minor <= 2) {
-        hintLog.logMessage(MODULE_NAME, 'It is against Angular best practices to ' +
+      if (angular.version.minor <= 2) {
+        hint.logMessage(MODULE_NAME, 'It is against Angular best practices to ' +
           'instantiate a controller on the window. This behavior is deprecated in Angular' +
           ' 1.3.0', SEVERITY_WARNING);
       } else {
-        hintLog.logMessage(MODULE_NAME, 'Global instantiation of controllers was deprecated' +
+        hint.logMessage(MODULE_NAME, 'Global instantiation of controllers was deprecated' +
           ' in Angular 1.3.0. Define the controller on a module.', SEVERITY_ERROR);
       }
     }
@@ -62,30 +65,54 @@ function controllerDecorator($delegate) {
 */
 var originalModule = angular.module;
 
-function checkUppercaseName(controllerName) {
-  var firstLetter = controllerName.charAt(0);
-  if(firstLetter !== firstLetter.toUpperCase() && firstLetter === firstLetter.toLowerCase()) {
-    hintLog.logMessage(MODULE_NAME, 'The best practice is to name controllers with an' +
-      ' uppercase first letter. Check the name of \'' + controllerName + '\'.', SEVERITY_WARNING);
+function sendMessageForControllerName(name) {
+  var newName = name;
+  if (!startsWithUpperCase(name)) {
+    newName = title(newName);
+  }
+  if (!endsWithController(name)) {
+    newName = addControllerSuffix(newName);
+  }
+  if (name !== newName) {
+    hint.logMessage(MODULE_NAME,
+      'Consider renaming `' + name + '` to `' + newName + '`.',
+      SEVERITY_WARNING,
+      CATEGORY_CONTROLLER_NAME);
   }
 }
 
-function checkControllerInName(controllerName) {
-  var splitName = controllerName.split('Controller');
-  if(splitName.length === 1 || splitName[splitName.length - 1] !== '') {
-    hintLog.logMessage(MODULE_NAME, 'The best practice is to name controllers ending with ' +
-      '\'Controller\'. Check the name of \'' + controllerName + '\'.', SEVERITY_WARNING);
-  }
+function startsWithUpperCase(name) {
+  var firstChar = name.charAt(0);
+  return firstChar === firstChar.toUpperCase() &&
+         firstChar !== firstChar.toLowerCase();
 }
+
+function title (name) {
+  return name[0].toUpperCase() + name.substr(1);
+}
+
+var CONTROLLER_RE = /Controller$/;
+function endsWithController(name) {
+  return CONTROLLER_RE.test(name);
+}
+
+var RE = /(Ctrl|Kontroller)?$/;
+function addControllerSuffix(name) {
+  return name.replace(RE, 'Controller');
+}
+
+/*
+ * decorate angular module API
+ */
 
 angular.module = function() {
   var module = originalModule.apply(this, arguments),
-    originalController = module.controller;
+      originalController = module.controller;
+
   module.controller = function(controllerName, controllerConstructor) {
     nameToControllerMap[controllerName] = controllerConstructor;
     controllers[controllerConstructor] = controllerConstructor;
-    checkUppercaseName(controllerName);
-    checkControllerInName(controllerName);
+    sendMessageForControllerName(controllerName);
     return originalController.apply(this, arguments);
   };
   return module;

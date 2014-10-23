@@ -116,10 +116,10 @@ describe('controllerDecorator', function() {
                               '</div>');
     $compile(elm)(scope);
     $rootScope.$digest();
-    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
-      'controllers with an uppercase first letter. Check the name of \'globalFunction\'.', SEVERITY_WARNING);
-    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
-      'controllers ending with \'Controller\'. Check the name of \'globalFunction\'.', SEVERITY_WARNING);
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers',
+        'Consider renaming `globalFunction` to `GlobalFunctionController`.',
+        SEVERITY_WARNING,
+        'Name controllers according to best practices');
 
     delete window.globalFunction;
   });
@@ -169,8 +169,10 @@ describe('controllerDecorator', function() {
   it('should warn if a controller name does not begin with an uppercase letter', function(){
     angular.module('SampleApp', []).controller('sampleController', function() {});
     $controller('sampleController');
-    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
-      'controllers with an uppercase first letter. Check the name of \'sampleController\'.', SEVERITY_WARNING);
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers',
+        'Consider renaming `sampleController` to `SampleController`.',
+        SEVERITY_WARNING,
+        'Name controllers according to best practices');
   });
 
 
@@ -184,16 +186,20 @@ describe('controllerDecorator', function() {
   it('should warn if a controller name does not include Controller', function(){
     angular.module('SampleApp', []).controller('Sample', function() {});
     $controller('Sample');
-    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
-      'controllers ending with \'Controller\'. Check the name of \'Sample\'.', SEVERITY_WARNING);
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers',
+        'Consider renaming `Sample` to `SampleController`.',
+        SEVERITY_WARNING,
+        'Name controllers according to best practices');
   });
 
 
   it('should warn if a controller name does not end with Controller', function(){
     angular.module('SampleApp', []).controller('SampleControllerYay', function() {});
     $controller('SampleControllerYay');
-    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers', 'The best practice is to name ' +
-      'controllers ending with \'Controller\'. Check the name of \'SampleControllerYay\'.', SEVERITY_WARNING);
+    expect(hintLog.logMessage).toHaveBeenCalledWith('Controllers',
+        'Consider renaming `SampleControllerYay` to `SampleControllerYayController`.',
+        SEVERITY_WARNING,
+        'Name controllers according to best practices');
   });
 
 
@@ -209,9 +215,9 @@ describe('controllerDecorator', function() {
     angular.module('SampleApp', []).controller('sample', function() {});
     $controller('sample');
     var log = hintLog.flush();
-    var totalNumberOfMessages = log['Controllers']['Warning Messages'].length +
-                                (log['Controllers']['Error Messages'] || []).length;
+    var totalNumberOfMessages = log['Controllers'].warning.length +
+                                (log['Controllers'].error || []).length;
 
-    expect(totalNumberOfMessages).toBe(3);
+    expect(totalNumberOfMessages).toBe(2);
   });
 });
