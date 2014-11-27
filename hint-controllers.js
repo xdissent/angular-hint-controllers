@@ -17,7 +17,7 @@ var nameToControllerMap = {},
 */
 angular.module('ngHintControllers', []).
   config(['$provide', function ($provide) {
-    $provide.decorator('$controller', ['$controller', controllerDecorator]);
+    $provide.decorator('$controller', ['$delegate', controllerDecorator]);
   }]);
 
 function controllerDecorator($delegate) {
