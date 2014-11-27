@@ -220,4 +220,15 @@ describe('controllerDecorator', function() {
 
     expect(totalNumberOfMessages).toBe(2);
   });
+
+
+  it('should allow "controller as" syntax', function() {
+    angular.module('SampleApp', []).controller('SampleController', function() {});
+    $rootScope.$digest();
+    var scope = $rootScope.$new();
+    expect(function() {
+      $controller('SampleController as sampleCtrl', {$scope: scope});
+    }).not.toThrow();
+    expect(scope.sampleCtrl).toBeDefined();
+  });
 });

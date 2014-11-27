@@ -22,8 +22,13 @@ angular.module('ngHintControllers', []).
 
 function controllerDecorator($delegate) {
   return function(ctrl, locals) {
+    var ctrlAs;
     //If the controller name is passed, find the controller than matches it
     if (typeof ctrl === 'string') {
+      // Extract controller name from possible expression
+      var match = ctrl.match(/^(\S+)(\s+as\s+(\w+))?$/);
+      ctrl = match[1];
+      ctrlAs = match[3];
       if (nameToControllerMap[ctrl]) {
         ctrl = nameToControllerMap[ctrl];
       } else {
@@ -51,9 +56,9 @@ function controllerDecorator($delegate) {
           ' in Angular 1.3.0. Define the controller on a module.', SEVERITY_ERROR);
       }
     }
-    arguments[0] = ctrl;
-    arguments[1] = locals;
-    var ctrlInstance = $delegate.apply(this, arguments);
+    var args = [ctrl, locals].concat(Array.prototype.slice.call(arguments, 2));
+    args[3] = args[3] || ctrlAs;
+    var ctrlInstance = $delegate.apply(this, args);
     return ctrlInstance;
   };
 }
