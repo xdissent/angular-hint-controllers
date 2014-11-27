@@ -16,9 +16,9 @@ var nameToControllerMap = {},
 * log a message if the controller is instantiated on the window
 */
 angular.module('ngHintControllers', []).
-  config(function ($provide) {
-    $provide.decorator('$controller', controllerDecorator);
-  });
+  config(['$provide', function ($provide) {
+    $provide.decorator('$controller', ['$controller', controllerDecorator]);
+  }]);
 
 function controllerDecorator($delegate) {
   return function(ctrl, locals) {
